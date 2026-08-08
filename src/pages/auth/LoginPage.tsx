@@ -7,7 +7,6 @@ import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/contexts/ToastContext';
-import { supabase } from '@/lib/supabase';
 
 const roleDashboardPaths: Record<string, string> = {
   super_admin: '/dashboard/super-admin',
@@ -45,21 +44,6 @@ export default function LoginPage() {
     } catch (err) {
       console.error(err);
       error('Sign in failed', (err as Error).message || 'Please check your credentials.');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleDemoLogin = async (email: string, password: string) => {
-    setForm({ email, password, remember: true });
-    setLoading(true);
-    try {
-      const { error: err } = await signIn(email, password);
-      if (err) throw err;
-      success('Demo login', 'Signed in with demo account.');
-    } catch (err) {
-      console.error(err);
-      error('Demo login failed', 'Demo accounts may not be set up yet. Please run the SQL seed.');
     } finally {
       setLoading(false);
     }
@@ -162,37 +146,6 @@ export default function LoginPage() {
               Sign In
             </Button>
           </form>
-
-          {/* Demo accounts */}
-          <div className="mt-8 p-4 bg-navy-50 dark:bg-navy-900 rounded-xl">
-            <p className="text-xs font-semibold text-navy-700 dark:text-navy-200 mb-3">Quick Demo Login:</p>
-            <div className="grid grid-cols-2 gap-2">
-              <button
-                onClick={() => handleDemoLogin('super.admin@myne7x.com', 'DemoPass123!')}
-                className="text-xs px-3 py-2 bg-white dark:bg-navy-800 rounded-lg border border-navy-200 dark:border-navy-700 hover:border-teal-400 text-navy-700 dark:text-navy-200 transition-colors"
-              >
-                Super Admin
-              </button>
-              <button
-                onClick={() => handleDemoLogin('admin@myne7x.com', 'DemoPass123!')}
-                className="text-xs px-3 py-2 bg-white dark:bg-navy-800 rounded-lg border border-navy-200 dark:border-navy-700 hover:border-teal-400 text-navy-700 dark:text-navy-200 transition-colors"
-              >
-                Admin
-              </button>
-              <button
-                onClick={() => handleDemoLogin('agent@myne7x.com', 'DemoPass123!')}
-                className="text-xs px-3 py-2 bg-white dark:bg-navy-800 rounded-lg border border-navy-200 dark:border-navy-700 hover:border-teal-400 text-navy-700 dark:text-navy-200 transition-colors"
-              >
-                Agent
-              </button>
-              <button
-                onClick={() => handleDemoLogin('client@myne7x.com', 'DemoPass123!')}
-                className="text-xs px-3 py-2 bg-white dark:bg-navy-800 rounded-lg border border-navy-200 dark:border-navy-700 hover:border-teal-400 text-navy-700 dark:text-navy-200 transition-colors"
-              >
-                Client
-              </button>
-            </div>
-          </div>
 
           <p className="text-center text-sm text-navy-500 dark:text-navy-400 mt-6">
             Don't have an account?{' '}
